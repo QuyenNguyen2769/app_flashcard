@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TamaguiProvider, Theme } from 'tamagui';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { tamaguiConfig } from '@/tamagui.config';
@@ -41,6 +42,8 @@ function RootNavigator() {
           <Stack.Screen name="deck-form" />
           <Stack.Screen name="study/[id]" />
           <Stack.Screen name="quiz/[id]" />
+          <Stack.Screen name="quiz-result/[id]" />
+          <Stack.Screen name="settings" />
         </Stack>
       </Theme>
     </TamaguiProvider>
@@ -49,10 +52,12 @@ function RootNavigator() {
 
 export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <RootNavigator />
-      </AuthProvider>
-    </QueryClientProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <RootNavigator />
+        </AuthProvider>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }

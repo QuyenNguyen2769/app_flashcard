@@ -15,6 +15,7 @@ import {
   useToggleCardLearnedMutation,
 } from '@/hooks/useFlashcardQueries';
 import { CardItem } from '@/types/flashcard';
+import { goBackSafely } from '@/utils/navigation';
 
 interface DeckDetailContentProps {
   deckId: string;
@@ -139,7 +140,7 @@ export function DeckDetailContent({
           <XStack alignItems="center" gap={10} flex={1}>
             {!isSplitView && (
               <Pressable
-                onPress={onBack || (() => router.back())}
+                onPress={onBack || (() => goBackSafely('/(tabs)/decks'))}
                 style={{
                   width: 38,
                   height: 38,

@@ -22,10 +22,11 @@ import { Deck } from '@/types/flashcard';
 export default function DecksScreen() {
   const { colors } = useAuth();
   const { width, height } = useWindowDimensions();
+  const isCompactHeader = width < 640;
   const isDeviceLandscapeOrTablet = width >= 700 || width > height;
 
-  const [forceSplitPreview, setForceSplitPreview] = useState(false);
-  const isSplitView = isDeviceLandscapeOrTablet || forceSplitPreview;
+  const [splitViewOverride, setSplitViewOverride] = useState<boolean | null>(null);
+  const isSplitView = splitViewOverride ?? isDeviceLandscapeOrTablet;
 
   const {
     data: decks = [],
@@ -86,9 +87,9 @@ export default function DecksScreen() {
         >
           <XStack
             justifyContent="space-between"
-            alignItems="center"
-            flexWrap="wrap"
-            gap={8}
+            alignItems={isCompactHeader ? 'stretch' : 'center'}
+            flexDirection={isCompactHeader ? 'column' : 'row'}
+            gap={10}
           >
             <XStack alignItems="center" gap={10}>
               <Text fontSize={22} fontWeight="800" color={colors.textPrimary}>
@@ -110,18 +111,25 @@ export default function DecksScreen() {
               </YStack>
             </XStack>
 
-            <XStack gap={8} alignItems="center">
-              {/* Nút bật/tắt nhanh chế độ chia đôi màn hình */}
+            <XStack
+              gap={8}
+              alignItems="center"
+              justifyContent={isCompactHeader ? 'flex-start' : 'flex-end'}
+              flexWrap="wrap"
+              width={isCompactHeader ? '100%' : undefined}
+            >
+              {/* Allow the user to override the responsive default layout. */}
               <Button
                 size="sm"
                 borderRadius={10}
+                flexShrink={0}
                 backgroundColor={
                   isSplitView ? BRAND_COLORS.gold : colors.subtleBg
                 }
-                onPress={() => setForceSplitPreview(!forceSplitPreview)}
+                onPress={() => setSplitViewOverride(!isSplitView)}
               >
                 <Ionicons
-                  name="tablet-landscape-outline"
+                  name={isSplitView ? 'list-outline' : 'grid-outline'}
                   size={16}
                   color={
                     isSplitView
@@ -137,13 +145,14 @@ export default function DecksScreen() {
                   }
                   marginLeft={6}
                 >
-                  {isSplitView ? 'Chế độ 2 cột' : 'Xem 2 cột'}
+                  {isSplitView ? 'Chuyển sang 1 cột' : 'Chuyển sang 2 cột'}
                 </Text>
               </Button>
 
               {/* Nút thêm bộ từ */}
               <Button
                 size="sm"
+                flexShrink={0}
                 backgroundColor={BRAND_COLORS.crimson}
                 borderRadius={10}
                 onPress={() => router.push('/deck-form')}
@@ -159,7 +168,7 @@ export default function DecksScreen() {
                   fontSize={12}
                   marginLeft={6}
                 >
-                  Thêm bộ từ
+                  Tạo bộ từ mới
                 </Text>
               </Button>
             </XStack>

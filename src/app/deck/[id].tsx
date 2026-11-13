@@ -1,9 +1,10 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { YStack } from 'tamagui';
 import { DeckDetailContent } from '@/components/DeckDetailContent';
 import { useAuth } from '@/context/AuthContext';
+import { goBackSafely } from '@/utils/navigation';
 
 export default function DeckDetailScreen() {
   const { colors } = useAuth();
@@ -16,7 +17,7 @@ export default function DeckDetailScreen() {
         <DeckDetailContent
           deckId={deckId}
           isSplitView={false}
-          onBack={() => router.back()}
+          onBack={() => goBackSafely('/(tabs)/decks')}
         />
       </YStack>
     </SafeAreaView>
