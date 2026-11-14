@@ -190,8 +190,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async () => {
+    await Promise.all([
+      AsyncStorage.removeItem(STORAGE_KEYS.USER),
+      AsyncStorage.removeItem('@flashcard_token'),
+    ]);
     setUser(null);
-    await AsyncStorage.removeItem(STORAGE_KEYS.USER);
   };
 
   const completeOnboarding = async () => {
